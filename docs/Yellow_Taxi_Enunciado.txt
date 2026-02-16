@@ -1,0 +1,67 @@
+Diseño de Sistema de Base de Datos de Alto Rendimiento
+Fecha de entrega Sábado a las 23:59 Puntos 10 Entregando una carga de archivo Disponible 14 de feb en 0:00 - 21 de feb en 23:59
+Debes proporcionar una solución que incluya:
+
+Un archivo README.md con instrucciones claras de ejecución.
+Scripts SQL organizados y documentados.
+Archivos de configuración necesarios.
+Gestiona tu tiempo adecuadamente para entregar una solución funcional, bien redactada y probada dentro del plazo establecido.
+
+Si el tiempo es limitado, prioriza:
+
+Calidad
+Documentación
+Claridad arquitectónica
+OBJETIVO DEL PROYECTO
+Diseñar e implementar un sistema de base de datos capaz de:
+
+Manejar tasas de inserción en tiempo real extremadamente altas (> 1 millón de filas por segundo).
+Permitir acceso a los datos mediante múltiples filtros.
+Mantener los datos accesibles a largo plazo.
+Proporcionar estadísticas agregadas en tiempo real.
+Dataset:
+
+nyc-yellow-taxi-trip-data
+
+Descarga:
+
+curl -L -o nyc-yellow-taxi-trip-data.zip https://www.kaggle.com/api/v1/datasets/download/elemento/nyc-yellow-taxi-trip-dataLinks to an external site.
+
+REQUISITOS FUNCIONALES
+El sistema debe:
+
+Manejar inserciones en tiempo real a ultra alta velocidad.
+Permitir consultas con distintos filtros.
+Mantener los datos accesibles a largo plazo.
+Permitir obtener estadísticas agregadas.
+ANALÍTICAS OBLIGATORIAS
+Implementar consultas para obtener:
+
+Número de viajes por día.
+Duración media por hora del día.
+Densidad de taxis por kilómetro cuadrado.
+Variación mes a mes y trimestre a trimestre de la suma de propinas por hora.
+REQUISITOS TÉCNICOS
+Utilizar uno de los siguientes motores:
+
+PostgreSQL
+MySQL
+ClickHouse
+Mongodb
+EXPECTATIVAS
+La solución debe:
+
+Utilizar SQL limpio y documentado.
+Proporcionar rendimiento razonable en entorno local.
+Incluir estrategia de escalado (bajo tu punto de vista).
+Estar bien documentada.
+ESCALABILIDAD
+Describir:
+
+Escalado vertical.
+Escalado horizontal.
+Particionado o sharding.
+Replicación.
+REFLEXIÓN FINAL
+¿Qué parte fue más interesante?
+¿Qué parte fue más compleja?

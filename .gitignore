@@ -1,0 +1,20 @@
+# Dataset (no subir)
+data/
+*.csv
+*.zip
+
+# OS/editor
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs/temporales
+*.log
+*.tmp
+
+# Docker volumes locales (si aplica)
+clickhouse_data/

@@ -1,0 +1,92 @@
+Estadísticas desde Clickhouse:
+
+A) Estadísticas del dataset (cuánto hay y cómo está repartido)
+
+	(1) Total de filas
+
+	47.248.845
+
+	(2) Filas por mes (verifica que están los 4 CSV): 
+
+	│     201501 │ 12748986 │ -- 12.75 million
+	│     201601 │ 10906858 │ -- 10.91 million
+	│     201602 │ 11382049 │ -- 11.38 million
+	│     201603 │ 12210952 │ -- 12.21 million
+
+	(3) Rango temporal real
+
+	┌────────── min_pickup ─┬──────── max_pickup ─┐
+	│ 2015-01-01 00:00:00       │ 2016-03-31 23:59:59   │
+	└────────────────────┴──────────────────┘
+
+	(4) Comprobar que las MVs están “al día”
+
+	┌─ base_rows─┬──mv_rows─┐
+	│   47248845 │ 47248845   │ -- 47.25 million
+	└─────────┴─────────┘
+
+B) Estadísticas de almacenamiento (disco, particiones, piezas)
+
+	(5) Tamaño en disco por tabla (MUY útil para el informe)
+
+	┌─database─┬─table───────────────┬─size_on_disk─┬─────rows ─┐
+	│ taxi      │ taxi_trips               │ 1.60 GiB     │ 47248845    │ -- 47.25 million
+	│ taxi      │ pickups_density_grid_1km │ 420.23 KiB   │    90740    │
+	│ taxi      │ duration_by_hour         │ 3.02 KiB     │       96    │
+	│ taxi      │ tips_by_month_hour       │ 2.65 KiB     │       96    │
+	│ taxi      │ trips_by_day             │ 2.23 KiB     │      122    │
+	└────────┴────────────────────┴───────────┴──────────┘
+
+	(6) Tamaño por partición (tabla principal)
+
+	┌─partition ─┬─────rows─┬─size─────┐
+	│ 201501     │ 12748986   │ 442.43 MiB │
+	│ 201601     │ 10906858   │ 378.86 MiB │
+	│ 201602     │ 11382049   │ 394.40 MiB │
+	│ 201603     │ 12210952   │ 423.12 MiB │
+	└─────────┴──────────┴─────────┘
+
+C) Estadísticas de rendimiento (benchmark de consultas)
+
+	(7) Query pesada (sin MV) — viajes por día
+	122 rows in set. Elapsed: 0.021 sec. Processed 47.25 million rows, 94.50 MB (2.24 billion rows/s., 4.49 GB/s.)
+	Peak memory usage: 22.14 MiB.
+
+	(8) Misma query usando agregados (con MV)
+	122 rows in set. Elapsed: 0.003 sec.
+
+	Relación 1:7 (7 veces mas rápida la segunda que la primera)
+
+D) Stats internas del servidor (opcional pero potente)
+
+	(9) Consultas recientes y su tiempo
+	5 rows in set. Elapsed: 0.011 sec.
+
+	(10) Métricas rápidas del sistema
+
+	(10a) SELECT * FROM system.metrics;
+
+	Query id: 5374c701-f38a-4cc6-9fcf-b2f12b0f4e2c
+	   ┌────metric──────────────────────────┬─────value────┬─description──────────────────────────────────────────────
+	   │ Query                                       │         1       │ Number of executing queries                                                                                                                                                                                                              	   │ Merge                                       │         0       │ Number of executing background merges                                                                                                                                                                                                   	   │ MergeParts                                  │         0       │ Number of source parts participating in current background merges                                                                                                                                                                       	   │ Move                                        │         0       │ Number of currently executing moves   
+
+	442 rows in set. Elapsed: 0.003 sec.
+
+	(10b)  SELECT * FROM system.asynchronous_metrics;
+
+	Query id: 8639cfc4-3263-44c9-a87b-2a4e56883ddd
+
+	┌─metric────────────────────────┬value────────────┬─────────────────────description─────────────────────────────────────────────────────────
+	│ jemalloc.prof.active                  │  1                 │ An internal metric of the low-level memory allocator (jemalloc). See https://jemalloc.net/jemalloc.3.html                                                                                                                                                  	│
+	│ BlockReadTime_ram15                   │  0                 │ Time in seconds spend in read operations requested from the block device, summed across all the operations. This is a 										system-wide metric, it includes all the processes on the host machine, not just clickhouse-server. Source: `/sys/block`. 									See https://www.kernel.org/doc/Documentation/block/stat.txt 
+	│ OSIdleTimeCPU2                        │ 0.9898525119757158 │ The ratio of time the CPU core was idle (not even ready to run a process waiting for IO) from the OS kernel standpoint. 										This is a system-wide metric, it includes all the processes on the host machine, not just clickhouse-server. This does not 									include the time when the CPU was under-utilized due to the reasons internal to the CPU (memory loads, pipeline stalls, 									spredictions,running another SMT core). The value for a single CPU core will be in the interval [0..1]. The value for all 									CPU cores is calculated as a sum across them [0..num cores]. 
+
+	│ PSI_IO_full                           │                  0 │ Microseconds of stall time since last measurement.Upstream docs can be found https://docs.kernel.org/accounting/psi.html 									for the	metrics and how to interpret them                                                                                         
+	│ OSUserTimeCPU19                       │                  0 │ The ratio of time the CPU core was running userspace code. This is a system-wide metric, it includes all the processes on 									the host machine, not just clickhouse-server. This includes also the time when the CPU was under-utilized due to the 										reasons internal to the CPU (memory loads, pipeline stalls, branch mispredictions, running another SMT core). The value for 									a single CPU core will be in the interval [0..1]. The value for all CPU cores is calculated as a sum across them [0..num 									cores].
+
+	841 rows in set. Elapsed: 0.002 sec.
+
+
+
+
+                                                                                                                                                                                                

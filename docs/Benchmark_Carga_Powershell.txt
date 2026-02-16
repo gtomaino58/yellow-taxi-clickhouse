@@ -1,0 +1,12 @@
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
+.\ingestion\load_data.ps1
+$sw.Stop()
+$seconds = [math]::Round($sw.Elapsed.TotalSeconds,2)
+
+$rows = docker exec -i clickhouse clickhouse-client --query "SELECT count() FROM taxi.taxi_trips"
+$rows = [int64]$rows.Trim()
+
+$rate = [math]::Round($rows / $seconds, 2)
+"Filas: $rows"
+"Segundos: $seconds"
+"Throughput (filas/seg): $rate"
