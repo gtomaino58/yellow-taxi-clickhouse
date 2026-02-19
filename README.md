@@ -91,6 +91,8 @@ Get-Content .\schema\02_aggregates.sql -Raw | docker exec -i clickhouse clickhou
 4) Cargar los datos
 
 .\ingestion\load_data.ps1
+(en el caso de que powershell niegue la ejecucion, ejecutar
+powershell -ExecutionPolicy Bypass -File .\ingestion\load_data.ps1)
 
 5) Verificar carga
 
