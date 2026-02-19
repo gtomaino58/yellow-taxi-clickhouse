@@ -13,8 +13,8 @@ foreach ($f in $files) {
   if (!(Test-Path $path)) { throw "No encuentro el fichero: $path" }
 
   Write-Host "Cargando $f ..."
-  Get-Content $path -ReadCount 0 | docker exec -i clickhouse clickhouse-client `
-    --query "INSERT INTO taxi.taxi_trips FORMAT CSVWithNames"
+    docker exec -i clickhouse clickhouse-client `
+  --query "INSERT INTO taxi.taxi_trips FORMAT CSVWithNames" < $path
 
   Write-Host "OK $f"
 }
